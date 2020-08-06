@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS event_dates;
+DROP TABLE IF EXISTS event_locations;
+DROP TABLE IF EXISTS event_actors;
+DROP TABLE IF EXISTS event_sources;
+DROP TYPE IF EXISTS source_type_enum;
+DROP TABLE IF EXISTS perspective_events;
+DROP TYPE IF EXISTS historicity_stance_enum;
+DROP TABLE IF EXISTS topic_events;
+DROP TABLE IF EXISTS user_organizations;
+DROP TYPE IF EXISTS user_organization_role_enum;
+DROP TABLE IF EXISTS locations;
+DROP TABLE IF EXISTS actors;
+DROP TABLE IF EXISTS perspectives;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS topics;
+DROP TABLE IF EXISTS organizations;
+DROP TABLE IF EXISTS users;
