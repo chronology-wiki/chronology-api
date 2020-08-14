@@ -229,12 +229,12 @@ BEGIN
   ;
 
   INSERT INTO event_locations (event_id, location_id, perspective_id) VALUES
-    (conviction_event_id, courthouse_location_id, consensus_perspective_id)
+    (conviction_event_id, courthouse_location_id, consensus_perspective_id),
     (murder_event_id, avery_property_location_id, prosecution_perspective_id)
   ;
 
   INSERT INTO event_dates (event_id, perspective_id, exact_date, range_date_start, range_date_end) VALUES
-    (conviction_event_id, consensus_perspective_id, '2007-03-19 12:00:00', NULL, NULL)
+    (conviction_event_id, consensus_perspective_id, '2007-03-19 12:00:00', NULL, NULL),
     (murder_event_id, prosecution_perspective_id, '2005-11-01 12:00:00', NULL, NULL),
     (murder_event_id, defense_perspective_id, NULL, '2005-10-31 12:00:00', '2005-11-04 12:00:00')
   ;

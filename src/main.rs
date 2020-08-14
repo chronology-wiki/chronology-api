@@ -20,7 +20,9 @@ use std::path::{Path, PathBuf};
 use rocket::response::NamedFile;
 
 /* Declaring a module, just for separating things better */
-pub mod heroes;
+pub mod topics;
+pub mod events;
+pub mod perspectives;
 
 /* Will hold our data structs */
 pub mod models;
@@ -40,16 +42,12 @@ pub fn establish_connection() -> PgConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-/* Static files Handler, will give back our heroes images */ 
-#[get("/imgs/<file..>")]
-fn assets(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("imgs/").join(file)).ok()
-}
-
-
 fn main() {
     rocket::ignite().mount("/", routes![
-        assets,
-        heroes::list, 
+        topics::list, 
+        topics::get_topic,
+        events::list,
+        perspectives::list,
+        perspectives::perspective_events
         ]).launch();
 }
