@@ -15,10 +15,6 @@ use diesel::Connection;
 use dotenv::dotenv;
 use std::env;
 
-/* Static files imports */
-use std::path::{Path, PathBuf};
-use rocket::response::NamedFile;
-
 /* Declaring a module, just for separating things better */
 pub mod topics;
 pub mod events;
@@ -48,6 +44,6 @@ fn main() {
         topics::get_topic,
         events::list,
         perspectives::list,
-        perspectives::perspective_events
+        perspectives::perspective_events_endpoint
         ]).launch();
 }

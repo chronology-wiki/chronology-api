@@ -108,6 +108,7 @@ CREATE TABLE topic_events (
 );
 
 CREATE TYPE historicity_stance_enum AS ENUM ('fact', 'fiction', 'unknown', 'leaning_fact', 'leaning_fiction');
+CREATE DOMAIN relevance_stance_domain AS INT NOT NULL CHECK (value < 5 AND value >= 0);
 
 CREATE TABLE perspective_events (
   perspective_event_id SERIAL PRIMARY KEY,
@@ -117,6 +118,7 @@ CREATE TABLE perspective_events (
   description TEXT,
   is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
   historicity_stance historicity_stance_enum NOT NULL,
+  relevance_stance relevance_stance_domain,
   created_by INT NOT NULL,
   created_date TIMESTAMP NOT NULL DEFAULT timezone('UTC'::text, NOW()),
   is_latest BOOLEAN NOT NULL DEFAULT TRUE,
@@ -214,9 +216,9 @@ BEGIN
     (mam_topic, murder_event_id)
   ;
 
-  INSERT INTO perspective_events (event_id, perspective_id, name, historicity_stance, created_by) VALUES
-    (murder_event_id, prosecution_perspective_id, 'Steven Avery and Brandon Dassey murder Teresa Halbach', 'fact', local_user),
-    (murder_event_id, defense_perspective_id, 'Teresa Halbach was murdered, but not by Steven Avery', 'fact', local_user)
+  INSERT INTO perspective_events (event_id, perspective_id, name, historicity_stance, relevance_stance, created_by) VALUES
+    (murder_event_id, prosecution_perspective_id, 'Steven Avery and Brandon Dassey murder Teresa Halbach', 'fact', 0, local_user),
+    (murder_event_id, defense_perspective_id, 'Teresa Halbach was murdered, but not by Steven Avery', 'fact', 0, local_user)
   ;
 
   INSERT INTO event_sources (event_id, perspective_id, url, source_type) VALUES

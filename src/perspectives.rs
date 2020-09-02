@@ -19,7 +19,13 @@ pub fn list() -> Json<Vec<Perspective>> {
 }
 
 #[get("/api/perspectives/<perspective_id>/events")]
-pub fn perspective_events(perspective_id: i32) -> Json<Vec<PerspectiveEvent>> {
+pub fn perspective_events_endpoint(perspective_id: i32) -> Json<Vec<PerspectiveEvent>> {
+  let events = perspective_events(perspective_id);
+
+  Json(events)
+}
+
+pub fn perspective_events(perspective_id: i32) -> Vec<PerspectiveEvent> {
   let tuples: Vec<(Perspective, PerspectiveEvent)> = perspectives::table
     .inner_join(perspective_events::table)
     .filter(perspective_events::perspective_id.eq(perspective_id))
@@ -32,5 +38,5 @@ pub fn perspective_events(perspective_id: i32) -> Json<Vec<PerspectiveEvent>> {
     events.push(tuple.1);
   }
 
-  Json(events)
+  events
 }

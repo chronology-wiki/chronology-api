@@ -7,6 +7,7 @@ use chrono::NaiveDateTime;
 use serde::Serialize;
 
 #[derive(DbEnum, Debug)]
+#[allow(non_camel_case_types)]
 pub enum Source_type_enum {
   Primary,
   Secondary,
@@ -14,6 +15,7 @@ pub enum Source_type_enum {
 }
 impl NotNull for Source_type_enum {}
 
+#[allow(non_camel_case_types)]
 #[derive(DbEnum, Debug, Serialize)]
 pub enum Historicity_stance_enum {
   Fact,
@@ -25,6 +27,7 @@ pub enum Historicity_stance_enum {
 impl NotNull for Historicity_stance_enum {}
 
 #[derive(DbEnum, Debug)]
+#[allow(non_camel_case_types)]
 pub enum User_organization_role_enum {
   Admin
 }
@@ -78,11 +81,12 @@ pub struct Perspective {
 pub struct PerspectiveEvent {
   perspective_event_id: i32,
   event_id: i32,
-  perspective_id: i32,
+  pub perspective_id: i32,
   name: Option<String>,
   description: Option<String>,
   is_deleted: bool,
   historicity_stance: Historicity_stance_enum,
+  relevance_stance: i32,
   created_by: i32,
   created_date: NaiveDateTime,
   is_latest: bool,

@@ -1,6 +1,5 @@
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     actors (actor_id) {
         actor_id -> Int4,
@@ -18,7 +17,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     event_actors (event_id, actor_id) {
         event_id -> Int4,
@@ -30,7 +28,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     event_dates (event_date_id) {
         event_date_id -> Int4,
@@ -44,7 +41,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     event_locations (event_id, location_id) {
         event_id -> Int4,
@@ -55,7 +51,7 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
+    use crate::models::Source_type_enum;
 
     event_sources (event_id, perspective_id) {
         event_id -> Int4,
@@ -68,7 +64,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     events (event_id) {
         event_id -> Int4,
@@ -85,7 +80,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     locations (location_id) {
         location_id -> Int4,
@@ -95,7 +89,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     organizations (organization_id) {
         organization_id -> Int4,
@@ -115,6 +108,7 @@ table! {
         description -> Nullable<Text>,
         is_deleted -> Bool,
         historicity_stance -> Historicity_stance_enumMapping,
+        relevance_stance -> Int4,
         created_by -> Int4,
         created_date -> Timestamp,
         is_latest -> Bool,
@@ -124,7 +118,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     perspectives (perspective_id) {
         perspective_id -> Int4,
@@ -141,7 +134,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     topic_events (event_id, topic_id) {
         event_id -> Int4,
@@ -151,7 +143,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     topics (topic_id) {
         topic_id -> Int4,
@@ -177,7 +168,6 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::*;
 
     users (user_id) {
         user_id -> Int4,
@@ -194,6 +184,7 @@ joinable!(event_actors -> organizations (organization_id));
 joinable!(event_locations -> locations (location_id));
 joinable!(perspective_events -> users (created_by));
 joinable!(perspective_events -> perspectives (perspective_id));
+joinable!(perspective_events -> events (event_id));
 joinable!(topic_events -> topics (topic_id));
 joinable!(topic_events -> events (event_id));
 joinable!(user_organizations -> organizations (organization_id));
