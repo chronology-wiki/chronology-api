@@ -14,12 +14,12 @@ use serde::Serialize;
 #[derive(Serialize)]
 pub struct EventWithPerspectives {
   event: Event,
-  perspectives: HashMap<i32, Vec<PerspectiveEvent>>
+  perspectives: HashMap<i32, PerspectiveEvent>
 }
 
-#[get("/api/topics/<topic_id>/events?<perspective>")]
-pub fn list(topic_id: i32, perspective: Option<String>) -> Json<Vec<EventWithPerspectives>> {
-  let perspective_ids_str = perspective.unwrap_or(String::default());
+#[get("/api/topics/<topic_id>/events?<perspectives>")]
+pub fn list(topic_id: i32, perspectives: Option<String>) -> Json<Vec<EventWithPerspectives>> {
+  let perspective_ids_str = perspectives.unwrap_or(String::default());
   let ids_iter = perspective_ids_str.split(",");
   let mut perspective_ids: Vec<i32> = Vec::new();
 
@@ -54,7 +54,7 @@ pub fn list(topic_id: i32, perspective: Option<String>) -> Json<Vec<EventWithPer
           perspectives: HashMap::new()
         });
       }
-      events_with_perspectives.get_mut(&event_id).unwrap().perspectives.insert(persp_evt.perspective_id, vec![persp_evt]);
+      events_with_perspectives.get_mut(&event_id).unwrap().perspectives.insert(persp_evt.perspective_id, persp_evt);
     }
 
   }
