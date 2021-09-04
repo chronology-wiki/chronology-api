@@ -15,6 +15,10 @@ use diesel::Connection;
 use dotenv::dotenv;
 use std::env;
 
+use rocket::http::Method;
+use rocket::{routes};
+use rocket_cors::{AllowedHeaders, AllowedOrigins};
+
 /* Declaring a module, just for separating things better */
 pub mod topics;
 pub mod events;
@@ -39,6 +43,16 @@ pub fn establish_connection() -> PgConnection {
 }
 
 fn main() {
+    // You can also deserialize this
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins: AllowedOrigins::All,
+        allowed_methods: vec![Method::Get, Method::Post, Method::Put, Method::Patch, Method::Delete].into_iter().map(From::from).collect(),
+        allowed_headers: AllowedHeaders::default(),
+        allow_credentials: false,
+        ..Default::default()
+    }
+    .to_cors().unwrap();
+
     rocket::ignite().mount("/", routes![
         topics::list, 
         topics::get_topic,
@@ -47,5 +61,5 @@ fn main() {
         perspectives::list,
         perspectives::get_perspective_events_endpoint,
         perspectives::create_perspective_event
-        ]).launch();
+        ]).attach(cors).launch();
 }
