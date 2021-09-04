@@ -10,11 +10,67 @@ use crate::schema::*;
 
 use crate::models::*;
 use serde::Serialize;
+use serde::Deserialize;
 
 #[derive(Serialize)]
 pub struct EventWithPerspectives {
   event: Event,
   perspectives: HashMap<i32, Vec<PerspectiveEvent>>
+}
+
+#[derive(Deserialize)]
+pub struct CreateEventRequestBody {
+  name: String,
+  description: Option<String>,
+  url_slug: String,
+  topics: Vec<i32>
+}
+
+#[derive(Insertable)]
+#[table_name="events"]
+struct EventToCreate {
+  name: String,
+  description: Option<String>,
+  url_slug: String,
+  created_by: i32
+}
+
+#[derive(Insertable)]
+#[table_name="topic_events"]
+struct TopicEventToCreate {
+  event_id: i32,
+  topic_id: i32
+}
+
+#[post("/api/events", data = "<request_body>")]
+pub fn create(request_body: Json<CreateEventRequestBody>) -> Json<Event> {
+  let request: CreateEventRequestBody = request_body.into_inner();
+
+  let evt_to_create = EventToCreate {
+    name: request.name,
+    description: request.description,
+    url_slug: request.url_slug,
+    created_by: 1
+  };
+
+  let evt_insert_res: Vec<Event> = diesel::insert_into(events::table)
+    .values(evt_to_create)
+    .load::<Event>(&crate::establish_connection())
+    .expect("Could not insert event");
+  
+  let evt: Event = evt_insert_res.into_iter().nth(0).unwrap();
+
+  let topic_events: Vec<TopicEventToCreate> = request.topics.iter().map(|topic_id| TopicEventToCreate {
+    topic_id: *topic_id,
+    event_id: evt.event_id
+  }).collect::<Vec<TopicEventToCreate>>();
+
+  diesel::insert_into(topic_events::table)
+    .values(topic_events)
+    .execute(&crate::establish_connection())
+    .expect("Could not insert topic events");
+
+  Json(evt)
 }
 
 #[get("/api/topics/<topic_id>/events?<perspective>")]

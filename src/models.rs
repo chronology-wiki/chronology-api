@@ -48,14 +48,14 @@ pub struct Topic {
 #[derive(Debug, Queryable, Serialize)]
 pub struct Event {
   pub event_id: i32,
-  name: String,
-  description: Option<String>,
-  url_slug: String,
-  is_deleted: bool,
-  is_latest: bool,
-  original_event: i32,
-  created_by: i32,
-  created_date: NaiveDateTime
+  pub name: String,
+  pub description: Option<String>,
+  pub url_slug: String,
+  pub is_deleted: bool,
+  pub is_latest: bool,
+  pub original_event: i32,
+  pub created_by: i32,
+  pub created_date: NaiveDateTime
 }
 
 #[derive(Debug, Queryable, Serialize)]

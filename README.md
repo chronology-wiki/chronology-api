@@ -19,3 +19,11 @@ docker-compose exec db bash
 su postgres
 psql
 ```
+
+## Running db migrations
+
+Install diesel CLI
+
+```sh
+diesel migrations run
+```

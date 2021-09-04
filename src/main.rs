@@ -42,6 +42,7 @@ fn main() {
     rocket::ignite().mount("/", routes![
         topics::list, 
         topics::get_topic,
+        events::create,
         events::list,
         perspectives::list,
         perspectives::perspective_events_endpoint
