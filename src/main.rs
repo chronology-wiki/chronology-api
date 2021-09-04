@@ -45,6 +45,7 @@ fn main() {
         events::create,
         events::list,
         perspectives::list,
-        perspectives::perspective_events_endpoint
+        perspectives::get_perspective_events_endpoint,
+        perspectives::create_perspective_event
         ]).launch();
 }
