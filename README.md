@@ -9,6 +9,10 @@ Install the nightly build of rust and docker-compose.
 docker-compose up
 
 # Terminal 2
+# One-time setup if you don't have cargo watch
+cargo install cargo-watch
+
+# Start up the web server
 cargo watch -x run
 ```
 
