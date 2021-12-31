@@ -2,7 +2,7 @@
 
 ## Local development
 
-Install the nightly build of rust and docker-compose.
+cargo-watch.
 
 ```sh
 # Terminal 1
@@ -27,6 +27,10 @@ psql
 ## Running db migrations
 
 Install diesel CLI
+
+```sh
+cargo install diesel_cli
+```
 
 ```sh
 diesel migrations run
