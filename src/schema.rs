@@ -51,7 +51,7 @@ table! {
 
 table! {
     use diesel::sql_types::*;
-    use crate::models::Source_type_enum;
+    use crate::models::*;
 
     event_sources (event_id, perspective_id) {
         event_id -> Int4,
@@ -84,6 +84,42 @@ table! {
     locations (location_id) {
         location_id -> Int4,
         name -> Text,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+
+    merge_proposal_comments (merge_proposal_comment_id) {
+        merge_proposal_comment_id -> Int4,
+        comment -> Nullable<Text>,
+        perspective_event_id -> Nullable<Int4>,
+        perspective_event_property -> Nullable<Text>,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
+    merge_proposal_history (merge_proposal_history_id) {
+        merge_proposal_history_id -> Int4,
+        user_id -> Int4,
+        action -> Merge_proposal_actionMapping,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
+    merge_proposals (merge_proposal_id) {
+        merge_proposal_id -> Int4,
+        source_perspective_id -> Int4,
+        target_perspective_id -> Int4,
+        status -> Merge_proposal_statusMapping,
+        created_by -> Int4,
+        created_date -> Timestamp,
     }
 }
 
@@ -188,6 +224,7 @@ joinable!(perspective_events -> events (event_id));
 joinable!(topic_events -> topics (topic_id));
 joinable!(topic_events -> events (event_id));
 joinable!(user_organizations -> organizations (organization_id));
+joinable!(merge_proposal_comments -> perspective_events (perspective_event_id));
 
 allow_tables_to_appear_in_same_query!(
     actors,
@@ -197,6 +234,9 @@ allow_tables_to_appear_in_same_query!(
     event_sources,
     events,
     locations,
+    merge_proposal_comments,
+    merge_proposal_history,
+    merge_proposals,
     organizations,
     perspective_events,
     perspectives,

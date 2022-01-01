@@ -25,6 +25,7 @@ use rocket_cors::{AllowedHeaders, AllowedOrigins};
 pub mod topics;
 pub mod events;
 pub mod perspectives;
+pub mod merge_proposals;
 
 /* Will hold our data structs */
 pub mod models;
@@ -65,6 +66,8 @@ fn main() {
         events::list,
         perspectives::list,
         perspectives::get_perspective_events_endpoint,
-        perspectives::create_perspective_event
+        perspectives::create_perspective_event,
+        merge_proposals::get_merge_proposals,
+        merge_proposals::get_user_merge_proposals
         ]).attach(cors).launch();
 }
