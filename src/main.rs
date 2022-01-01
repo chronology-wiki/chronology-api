@@ -15,6 +15,8 @@ use diesel::Connection;
 use dotenv::dotenv;
 use std::env;
 
+use diesel_logger::LoggingConnection;
+
 use rocket::http::Method;
 use rocket::{routes};
 use rocket_cors::{AllowedHeaders, AllowedOrigins};
@@ -32,17 +34,20 @@ pub mod schema;
 
 
 /* This will return our pg connection to use with diesel */
-pub fn establish_connection() -> PgConnection {
+pub fn establish_connection() -> LoggingConnection<PgConnection> {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
 
-    PgConnection::establish(&database_url)
+    LoggingConnection::<PgConnection>::establish(&database_url)
         .expect(&format!("Error connecting to {}", database_url))
 }
 
 fn main() {
+    std::env::set_var("RUST_LOG", "diesel_logger=debug");
+    env_logger::init();
+
     // You can also deserialize this
     let cors = rocket_cors::CorsOptions {
         allowed_origins: AllowedOrigins::All,
