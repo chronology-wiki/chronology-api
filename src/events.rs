@@ -12,10 +12,10 @@ use crate::models::*;
 use serde::Serialize;
 use serde::Deserialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct EventWithPerspectives {
   event: Event,
-  perspectives: HashMap<i32, Vec<PerspectiveEvent>>
+  perspectives: HashMap<i32, PerspectiveEvent>
 }
 
 #[derive(Deserialize)]
@@ -101,20 +101,19 @@ pub fn list(topic_id: i32, perspective: Option<String>) -> Json<Vec<EventWithPer
     let event_id = event.event_id;
     event_ids.insert(event_id);
 
+    if !events_with_perspectives.get(&event_id).is_some() {
+      events_with_perspectives.insert(event_id, EventWithPerspectives {
+        event: event,
+        perspectives: HashMap::new()
+      });
+    }
+
     let perspective_event_option: Option<PerspectiveEvent> = event_tuple.2;
     if perspective_event_option.is_some() {
       let persp_evt = perspective_event_option.unwrap();
-      if !events_with_perspectives.get(&event_id).is_some() {
-        events_with_perspectives.insert(event_id, EventWithPerspectives {
-          event: event,
-          perspectives: HashMap::new()
-        });
-      }
-      events_with_perspectives.get_mut(&event_id).unwrap().perspectives.insert(persp_evt.perspective_id, vec![persp_evt]);
+      events_with_perspectives.get_mut(&event_id).unwrap().perspectives.insert(persp_evt.perspective_id, persp_evt);
     }
-
   }
-  
   let mut result = Vec::new();
 
   for event_id in event_ids {
