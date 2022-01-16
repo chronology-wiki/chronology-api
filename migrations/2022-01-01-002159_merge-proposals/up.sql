@@ -9,7 +9,8 @@ CREATE TABLE merge_proposals (
   created_date TIMESTAMP NOT NULL DEFAULT timezone('UTC'::text, NOW()),
   CONSTRAINT fk_source_perspective FOREIGN KEY (source_perspective_id) REFERENCES perspectives (perspective_id),
   CONSTRAINT fk_target_perspective FOREIGN KEY (target_perspective_id) REFERENCES perspectives (perspective_id),
-  CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES users (user_id)
+  CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES users (user_id),
+  UNIQUE (source_perspective_id, target_perspective_id)
 );
 
 CREATE TYPE merge_proposal_action AS ENUM ('createdraft', 'create', 'comment', 'close', 'approve', 'reject', 'merge');

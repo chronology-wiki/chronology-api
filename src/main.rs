@@ -68,6 +68,7 @@ fn main() {
         perspectives::get_perspective_events_endpoint,
         perspectives::create_perspective_event,
         merge_proposals::get_merge_proposals,
-        merge_proposals::get_user_merge_proposals
+        merge_proposals::get_user_merge_proposals,
+        merge_proposals::create_merge_proposal
         ]).attach(cors).launch();
 }

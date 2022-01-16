@@ -14,6 +14,8 @@ cargo install cargo-watch
 
 # Start up the web server
 cargo watch -x run
+
+open http://localhost:8000
 ```
 
 ## Connecting to the database
