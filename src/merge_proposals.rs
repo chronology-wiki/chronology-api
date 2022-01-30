@@ -9,6 +9,8 @@ use crate::schema::*;
 use serde::Serialize;
 use serde::Deserialize;
 use crate::models::*;
+use crate::endpoint_utils::RequestError;
+use crate::endpoint_utils::RequestErrorExplanation;
 
 #[derive(Serialize)]
 pub struct GetMergeProposalsResponse {
@@ -50,19 +52,6 @@ struct MergeProposalToCreate {
   target_perspective_id: i32,
   status: Merge_proposal_status,
   created_by: i32
-}
-
-#[derive(Debug, Responder)]
-pub enum RequestError {
-  #[response(status = 400)]
-  BadRequest(Json<RequestErrorExplanation>),
-  #[response(status = 404)]
-  NotFound(Json<RequestErrorExplanation>),
-}
-
-#[derive(Debug, Serialize)]
-pub struct RequestErrorExplanation {
-  error: &'static str
 }
 
 #[post("/api/merge-proposals", data = "<request_body>")]

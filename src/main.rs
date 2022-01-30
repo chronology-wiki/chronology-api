@@ -26,8 +26,11 @@ pub mod topics;
 pub mod events;
 pub mod perspectives;
 pub mod merge_proposals;
+pub mod endpoint_utils;
 
 /* Will hold our data structs */
+use serde::Serialize;
+use serde::Deserialize;
 pub mod models;
 
 /* auto-generated table macros */
@@ -62,6 +65,7 @@ fn main() {
     rocket::ignite().mount("/", routes![
         topics::list, 
         topics::get_topic,
+        topics::get_topic_perspective_diffs,
         events::create,
         events::list,
         perspectives::list,

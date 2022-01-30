@@ -75,15 +75,43 @@ pub fn create(request_body: Json<CreateEventRequestBody>) -> Json<Event> {
 
 #[get("/api/topics/<topic_id>/events?<perspective>")]
 pub fn list(topic_id: i32, perspective: Option<String>) -> Json<Vec<EventWithPerspectives>> {
-  let perspective_ids_str = perspective.unwrap_or(String::default());
+  let perspective_ids = get_perspective_ids(perspective);
+
+  let (event_ids, mut events_with_perspectives): (HashSet::<i32>, HashMap::<i32, EventWithPerspectives>) = get_perspective_events(topic_id, perspective_ids);
+
+  let mut result = Vec::new();
+
+  for event_id in event_ids {
+    match events_with_perspectives.remove(&event_id) {
+      Some(event_with_persp) => {
+        result.push(event_with_persp);
+      },
+      None => {
+      }
+    }
+  }
+
+  Json(result)
+}
+
+pub fn get_perspective_ids(comma_separated_perspectives: Option<String>) -> Vec<i32> {
+  let perspective_ids_str = comma_separated_perspectives.unwrap_or(String::default());
   let ids_iter = perspective_ids_str.split(",");
   let mut perspective_ids: Vec<i32> = Vec::new();
 
   for id_str in ids_iter {
-    let id = String::from(id_str).parse::<i32>().unwrap_or(0);
-    perspective_ids.push(id);
+    match String::from(id_str).parse::<i32>() {
+      Ok(id) => {
+        perspective_ids.push(id)
+      },
+      Err(_err) => {}
+    }
   }
 
+  perspective_ids
+}
+
+pub fn get_perspective_events(topic_id: i32, perspective_ids: Vec<i32>) -> (HashSet::<i32>, HashMap::<i32, EventWithPerspectives>) {
   let event_tuples: Vec<(Event, TopicEvent, Option<PerspectiveEvent>)> = events::table
     .inner_join(topic_events::table)
     .filter(topic_events::topic_id.eq(topic_id))
@@ -114,17 +142,6 @@ pub fn list(topic_id: i32, perspective: Option<String>) -> Json<Vec<EventWithPer
       events_with_perspectives.get_mut(&event_id).unwrap().perspectives.insert(persp_evt.perspective_id, persp_evt);
     }
   }
-  let mut result = Vec::new();
 
-  for event_id in event_ids {
-    match events_with_perspectives.remove(&event_id) {
-      Some(event_with_persp) => {
-        result.push(event_with_persp);
-      },
-      None => {
-      }
-    }
-  }
-
-  Json(result)
+  (event_ids, events_with_perspectives)
 }
