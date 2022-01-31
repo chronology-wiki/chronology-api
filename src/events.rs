@@ -14,8 +14,8 @@ use serde::Deserialize;
 
 #[derive(Serialize, Debug)]
 pub struct EventWithPerspectives {
-  event: Event,
-  perspectives: HashMap<i32, PerspectiveEvent>
+  pub event: Event,
+  pub perspectives: HashMap<i32, PerspectiveEvent>
 }
 
 #[derive(Deserialize)]
@@ -77,7 +77,7 @@ pub fn create(request_body: Json<CreateEventRequestBody>) -> Json<Event> {
 pub fn list(topic_id: i32, perspective: Option<String>) -> Json<Vec<EventWithPerspectives>> {
   let perspective_ids = get_perspective_ids(perspective);
 
-  let (event_ids, mut events_with_perspectives): (HashSet::<i32>, HashMap::<i32, EventWithPerspectives>) = get_perspective_events(topic_id, perspective_ids);
+  let (event_ids, mut events_with_perspectives): (HashSet::<i32>, HashMap::<i32, EventWithPerspectives>) = get_perspective_events(topic_id, &perspective_ids);
 
   let mut result = Vec::new();
 
@@ -111,7 +111,7 @@ pub fn get_perspective_ids(comma_separated_perspectives: Option<String>) -> Vec<
   perspective_ids
 }
 
-pub fn get_perspective_events(topic_id: i32, perspective_ids: Vec<i32>) -> (HashSet::<i32>, HashMap::<i32, EventWithPerspectives>) {
+pub fn get_perspective_events(topic_id: i32, perspective_ids: &Vec<i32>) -> (HashSet::<i32>, HashMap::<i32, EventWithPerspectives>) {
   let event_tuples: Vec<(Event, TopicEvent, Option<PerspectiveEvent>)> = events::table
     .inner_join(topic_events::table)
     .filter(topic_events::topic_id.eq(topic_id))

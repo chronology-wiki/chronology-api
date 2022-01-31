@@ -18,7 +18,7 @@ pub enum Source_type_enum {
 impl NotNull for Source_type_enum {}
 
 #[allow(non_camel_case_types)]
-#[derive(DbEnum, Debug, Serialize, Deserialize)]
+#[derive(DbEnum, Debug, Serialize, Deserialize, PartialEq)]
 pub enum Historicity_stance_enum {
   Fact,
   Fiction,

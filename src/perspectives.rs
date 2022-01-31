@@ -85,3 +85,7 @@ pub fn perspective_events(perspective_id: i32) -> Vec<PerspectiveEvent> {
 
   events
 }
+
+pub fn perspective_events_diff(evt_1: &PerspectiveEvent, evt_2: &PerspectiveEvent) -> bool {
+  evt_1.name != evt_2.name || evt_1.description != evt_2.description || evt_1.historicity_stance != evt_2.historicity_stance || evt_1.relevance_stance != evt_2.relevance_stance
+}
